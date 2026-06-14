@@ -1,9 +1,24 @@
 import { Link } from "react-router-dom";
 
 function Sidebar() {
+ 
+
+  const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  window.location.href = "/login";
+};
+const user = JSON.parse(
+  localStorage.getItem("user")
+);
   return (
     <div className="sidebar">
-      <h2>🏪 Store</h2>
+      <h2>General Store</h2>
+
+<p className="shop-name">
+  {user?.shop_name}
+</p>
 
       <ul>
         <li>
@@ -39,6 +54,12 @@ function Sidebar() {
   </Link>
 </li>
       </ul>
+      <button
+  className="logout-btn"
+  onClick={logout}
+>
+  Logout
+</button>
     </div>
   );
 }
