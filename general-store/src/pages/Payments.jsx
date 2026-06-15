@@ -11,8 +11,13 @@ function Payments() {
   }, []);
 
   const fetchCustomers = () => {
-    axios
-      .get("http://localhost:5000/customers/udhaar")
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+axios.get(
+  `http://localhost:5000/customers/udhaar/${user.id}`
+)
       .then((res) => {
         setCustomers(res.data);
       });
@@ -24,11 +29,16 @@ function Payments() {
       return;
     }
 
-    axios
-      .post("http://localhost:5000/payments", {
-        customer_id: customerId,
-        amount,
-      })
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+axios
+  .post("http://localhost:5000/payments", {
+    customer_id: customerId,
+    amount,
+    user_id: user.id,
+  })
       .then(() => {
         alert("Payment Received");
 

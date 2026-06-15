@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../db");
-router.get("/history", (req, res) => {
+router.get("/history/:userId", (req, res) => {
+
+  const { userId } = req.params;
+
   const sql = `
     SELECT
       bills.*,
@@ -9,16 +12,23 @@ router.get("/history", (req, res) => {
     FROM bills
     JOIN customers
       ON bills.customer_id = customers.id
+    WHERE bills.user_id = ?
     ORDER BY bills.id DESC
   `;
 
-  db.query(sql, (err, result) => {
-    if (err) {
-      return res.status(500).json(err);
-    }
+  db.query(
+    sql,
+    [userId],
+    (err, result) => {
 
-    res.json(result);
-  });
+      if (err) {
+        return res.status(500).json(err);
+      }
+
+      res.json(result);
+
+    }
+  );
 });
 router.post("/", (req, res) => {
   const {
@@ -27,18 +37,20 @@ router.post("/", (req, res) => {
     paid_amount,
     remaining_amount,
     items,
+    user_id
   } = req.body;
 
   // Save Bill
   db.query(
     `INSERT INTO bills
-    (customer_id,total_amount,paid_amount,remaining_amount)
-    VALUES (?,?,?,?)`,
+    (customer_id,total_amount,paid_amount,remaining_amount,user_id)
+    VALUES (?,?,?,?,?)`,
     [
       customer_id,
       total_amount,
       paid_amount,
       remaining_amount,
+      user_id
     ],
     (err, result) => {
       if (err) {

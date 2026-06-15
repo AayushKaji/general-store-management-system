@@ -9,8 +9,13 @@ function PaymentHistory() {
   }, []);
 
   const fetchPayments = () => {
-    axios
-      .get("http://localhost:5000/payments/history")
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+axios.get(
+  `http://localhost:5000/payments/history/${user.id}`
+)
       .then((res) => {
         setPayments(res.data);
       })

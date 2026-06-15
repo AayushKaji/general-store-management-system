@@ -9,8 +9,13 @@ function SalesHistory() {
   }, []);
 
   const fetchBills = () => {
-    axios
-      .get("http://localhost:5000/bills/history")
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+axios.get(
+  `http://localhost:5000/bills/history/${user.id}`
+)
       .then((res) => {
         setBills(res.data);
       })

@@ -328,3 +328,35 @@
 .auth-card button:hover {
   background: #1d4ed8;
 }
+.form-input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 8px 0 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+.generate-btn {
+  margin: 10px;
+  width: auto;
+  padding: 12px 25px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.generate-btn:hover {
+  background: #1d4ed8;
+}

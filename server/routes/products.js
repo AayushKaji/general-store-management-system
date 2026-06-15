@@ -3,9 +3,17 @@ const router = express.Router();
 const db = require("../db");
 
 // Get all products
-router.get("/", (req, res) => {
+router.get("/:userId", (req, res) => {
+
+  const { userId } = req.params;
+
   db.query(
-    "SELECT * FROM products",
+    `
+    SELECT *
+    FROM products
+    WHERE user_id = ?
+    `,
+    [userId],
     (err, result) => {
       if (err) {
         return res.status(500).json(err);
@@ -18,14 +26,21 @@ router.get("/", (req, res) => {
 
 // Add product
 router.post("/", (req, res) => {
-  const { name, category, price, stock } = req.body;
-
-  const sql =
-    "INSERT INTO products(name,category,price,stock) VALUES(?,?,?,?)";
+  const {
+    name,
+    price,
+    stock,
+    category,
+    user_id,
+  } = req.body;
 
   db.query(
-    sql,
-    [name, category, price, stock],
+    `
+    INSERT INTO products
+    (name,price,stock,category,user_id)
+    VALUES (?,?,?,?,?)
+    `,
+    [name, price, stock,category, user_id],
     (err, result) => {
       if (err) {
         return res.status(500).json(err);

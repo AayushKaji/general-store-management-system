@@ -11,8 +11,14 @@ function Customers() {
   const [address, setAddress] = useState("");
 
   const fetchCustomers = () => {
-    axios
-      .get("http://localhost:5000/customers")
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+
+axios.get(
+  `http://localhost:5000/customers/${user.id}`
+)
       .then((res) => {
         setCustomers(res.data);
       })
@@ -31,13 +37,17 @@ function Customers() {
       return;
     }
 
-    axios
-      .post("http://localhost:5000/customers", {
-        name,
-        phone,
-        address,
-      })
-      .then(() => {
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+axios.post("http://localhost:5000/customers", {
+  name,
+  phone,
+  address,
+  user_id: user.id
+})
+    .then(() => {
         fetchCustomers();
 
         setName("");

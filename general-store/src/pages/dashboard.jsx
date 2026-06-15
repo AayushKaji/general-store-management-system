@@ -2,22 +2,36 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function Dashboard() {
-  const [stats, setStats] = useState({
-  products: 0,
-  customers: 0,
-  sales: 0,
-  udhaar: 0,
-});
 
-useEffect(() => {
-  axios
-    .get("http://localhost:5000/dashboard")
-    .then((res) => {
-      setStats(res.data);
-    });
-}, []);
+  const [stats, setStats] = useState({
+    products: 0,
+    customers: 0,
+    sales: 0,
+    udhaar: 0,
+  });
+
+  useEffect(() => {
+
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
+
+    axios
+      .get(
+        `http://localhost:5000/dashboard/${user.id}`
+      )
+      .then((res) => {
+        setStats(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+  }, []);
+
   return (
     <div>
+
       <h1 className="dashboard-title">
         General Store Dashboard
       </h1>
@@ -35,7 +49,7 @@ useEffect(() => {
         </div>
 
         <div className="card">
-          <h3>Today's Sales</h3>
+          <h3>Total Sales</h3>
           <p>₹{stats.sales}</p>
         </div>
 
@@ -45,6 +59,7 @@ useEffect(() => {
         </div>
 
       </div>
+
     </div>
   );
 }

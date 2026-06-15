@@ -19,18 +19,32 @@ function Billing() {
   }, []);
 
   const fetchCustomers = () => {
-    axios
-      .get("http://localhost:5000/customers")
-      .then((res) => setCustomers(res.data))
-      .catch((err) => console.log(err));
-  };
 
-  const fetchProducts = () => {
-    axios
-      .get("http://localhost:5000/products")
-      .then((res) => setProducts(res.data))
-      .catch((err) => console.log(err));
-  };
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
+
+  axios
+    .get(
+      `http://localhost:5000/customers/${user.id}`
+    )
+    .then((res) => setCustomers(res.data))
+    .catch((err) => console.log(err));
+};
+
+const fetchProducts = () => {
+
+  const user = JSON.parse(
+    localStorage.getItem("user")
+  );
+
+  axios
+    .get(
+      `http://localhost:5000/products/${user.id}`
+    )
+    .then((res) => setProducts(res.data))
+    .catch((err) => console.log(err));
+};
 
   const addToCart = () => {
     if (!selectedProduct || !quantity) {
@@ -67,7 +81,9 @@ function Billing() {
     alert("Cart is empty");
     return;
   }
-
+const user = JSON.parse(
+  localStorage.getItem("user")
+);
   axios
     .post("http://localhost:5000/bills", {
       customer_id: selectedCustomer,
@@ -78,6 +94,7 @@ function Billing() {
           ? remainingAmount
           : 0,
       items: cart,
+      user_id: user.id
     })
     .then(() => {
       alert("Bill Generated");
@@ -105,7 +122,14 @@ downloadBill();
   doc.text("GENERAL STORE", 70, 15);
 
   doc.setFontSize(12);
-  doc.text(`Customer ID: ${selectedCustomer}`, 10, 30);
+  const customer = customers.find(
+  (c) => c.id === Number(selectedCustomer)
+);
+doc.text(
+  `Customer: ${customer?.name}`,
+  10,
+  30
+);
   doc.text(`Date: ${new Date().toLocaleString()}`, 10, 40);
 
   let y = 60;
@@ -242,13 +266,12 @@ downloadBill();
       </h2>
       <div style={{ marginTop: "20px" }}>
   <input
-    type="number"
-    placeholder="Paid Amount"
-    value={paidAmount}
-    onChange={(e) =>
-      setPaidAmount(e.target.value)
-    }
-  />
+  type="number"
+  placeholder="Enter Paid Amount"
+  value={paidAmount}
+  onChange={(e) => setPaidAmount(e.target.value)}
+  className="form-input"
+/>
 
   <h3>
     Remaining: ₹
@@ -257,32 +280,12 @@ downloadBill();
       : 0}
   </h3>
 
-  <button
-    style={{
-      padding: "10px 20px",
-      marginTop: "10px",
-      background: "#2563eb",
-      color: "white",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-    }}
-  >
-    <button
+<button
+  className="generate-btn"
   onClick={generateBill}
-  style={{
-    padding: "10px 20px",
-    marginTop: "10px",
-    background: "#2563eb",
-    color: "white",
-    border: "none",
-    borderRadius: "6px",
-    cursor: "pointer",
-  }}
 >
   Generate Bill
 </button>
-  </button>
 </div>
 
     </div>

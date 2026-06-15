@@ -9,8 +9,15 @@ function UdhaarManagement() {
   }, []);
 
   const fetchUdhaar = () => {
+
+    const user = JSON.parse(
+      localStorage.getItem("user")
+    );
+
     axios
-      .get("http://localhost:5000/customers/udhaar")
+      .get(
+        `http://localhost:5000/customers/udhaar/${user.id}`
+      )
       .then((res) => {
         setCustomers(res.data);
       })
@@ -24,6 +31,7 @@ function UdhaarManagement() {
       <h1>Udhaar Management</h1>
 
       <table className="product-table">
+
         <thead>
           <tr>
             <th>Customer</th>
@@ -33,14 +41,25 @@ function UdhaarManagement() {
         </thead>
 
         <tbody>
-          {customers.map((customer) => (
-            <tr key={customer.id}>
-              <td>{customer.name}</td>
-              <td>{customer.phone}</td>
-              <td>₹{customer.balance}</td>
+
+          {customers.length === 0 ? (
+            <tr>
+              <td colSpan="3">
+                No Pending Udhaar
+              </td>
             </tr>
-          ))}
+          ) : (
+            customers.map((customer) => (
+              <tr key={customer.id}>
+                <td>{customer.name}</td>
+                <td>{customer.phone}</td>
+                <td>₹{customer.balance}</td>
+              </tr>
+            ))
+          )}
+
         </tbody>
+
       </table>
     </div>
   );

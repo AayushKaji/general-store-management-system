@@ -13,8 +13,13 @@ function Products() {
 
   // Load products
   const fetchProducts = () => {
-    axios
-      .get("http://localhost:5000/products")
+    const user = JSON.parse(
+  localStorage.getItem("user")
+);
+
+axios.get(
+  `http://localhost:5000/products/${user.id}`
+)
       .then((res) => {
         setProducts(res.data);
       })
@@ -34,13 +39,20 @@ function Products() {
       return;
     }
 
-    axios
-      .post("http://localhost:5000/products", {
-        name,
-        category,
-        price,
-        stock,
-      })
+  const user = JSON.parse(
+  localStorage.getItem("user")
+);
+console.log(category);
+    axios.post(
+  "http://localhost:5000/products",
+  {
+    name,
+    price,
+    stock,
+    category,
+    user_id: user.id,
+  }
+)
       .then(() => {
         fetchProducts();
 
